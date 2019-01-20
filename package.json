@@ -1,0 +1,33 @@
+{
+  "name": "react-d3-plot",
+  "version": "0.0.1",
+  "description": "Small react ploting library. Uses d3.",
+  "main": "build/index.js",
+  "peerDependencies": {
+    "react": "^16.7.0",
+    "d3": "^4.13.0"
+  },
+  "dependencies": {
+    "react": "^16.7.0",
+    "d3": "^4.13.0",
+    "webpack": "^2.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack --watch",
+    "build": "webpack"
+  },
+  "author": {
+    "name": "Iñigo Etxaniz",
+    "email": "inigoetxaniz@gmail.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.5.1"
+  }
+}
