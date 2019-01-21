@@ -34,7 +34,7 @@ const LinearBottomAxis = D3blackbox(function() {
         );
         
     d3.select(this.gridRef.current)
-        .selectAll(".tick:not(:first-of-type) line")
+        .selectAll("line")
         .attr("stroke", "#999")
         .attr("stroke-dasharray", "2,2");;
 });
@@ -61,9 +61,9 @@ const LinearLeftAxis = D3blackbox(function() {
         );
         
     d3.select(this.gridRef.current)
-        .selectAll(".tick:not(:first-of-type) line")
+        .selectAll("line")
         .attr("stroke", "#999")
-        .attr("stroke-dasharray", "2,2");;
+        .attr("stroke-dasharray", "2,2");
 });
 
 export {Axis, LinearBottomAxis, LinearLeftAxis};

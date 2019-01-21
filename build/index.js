@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -100,9 +100,9 @@ var _d = __webpack_require__(1);
 
 var d3 = _interopRequireWildcard(_d);
 
-var _Axis = __webpack_require__(5);
+var _Axis = __webpack_require__(3);
 
-var _ZoomRegion = __webpack_require__(3);
+var _ZoomRegion = __webpack_require__(4);
 
 var _ZoomRegion2 = _interopRequireDefault(_ZoomRegion);
 
@@ -144,9 +144,9 @@ var Plot = function (_Component) {
             for (var i = 0; i < _this.props.signals.length; i++) {
                 var signal = _this.props.signals[i];
                 minx = Math.min(minx, Math.min.apply(Math, _toConsumableArray(signal.xData)));
-                maxx = Math.max(minx, Math.max.apply(Math, _toConsumableArray(signal.xData)));
+                maxx = Math.max(maxx, Math.max.apply(Math, _toConsumableArray(signal.xData)));
                 miny = Math.min(miny, Math.min.apply(Math, _toConsumableArray(signal.yData)));
-                maxy = Math.max(miny, Math.max.apply(Math, _toConsumableArray(signal.yData)));
+                maxy = Math.max(maxy, Math.max.apply(Math, _toConsumableArray(signal.yData)));
 
                 signals.push(parseSignal(_this.props.signals[i]));
             }
@@ -168,7 +168,8 @@ var Plot = function (_Component) {
             outerYRange: outerYRange,
             currentXRange: outerXRange,
             currentYRange: outerYRange,
-            signals: signals
+            signals: signals,
+            previousNumberOfSignals: 0
         };
         return _this;
     }
@@ -200,6 +201,11 @@ var Plot = function (_Component) {
     }, {
         key: 'plotSignals',
         value: function plotSignals() {
+            var colors = d3.schemeCategory10;
+            if (this.state.signals.length > 10) {
+                colors = d3.schemeCategory20;
+            }
+
             // Create scales
             var xDomain = this.state.currentXRange;
             var yDomain = this.state.currentYRange;
@@ -214,10 +220,15 @@ var Plot = function (_Component) {
                 return yScale(d.value);
             });
 
-            d3.select(this.signalsRef.current).select('path').remove();
+            for (var i = 0; i < this.state.previousNumberOfSignals; i++) {
+                d3.select(this.signalsRef.current).select('path').remove();
+            }
 
-            for (var i = 0; i < this.state.signals.length; i++) {
-                d3.select(this.signalsRef.current).append('path').datum(this.state.signals[i]).attr("fill", "none").attr("stroke", "steelblue").attr("d", line);
+            for (var _i = 0; _i < this.state.signals.length; _i++) {
+                d3.select(this.signalsRef.current).append('path').datum(this.state.signals[_i]).attr("fill", "none").attr("stroke", colors[_i % colors.length]).attr("d", line);
+            }
+            if (this.state.previousNumberOfSignals !== this.state.signals.length) {
+                this.state.previousNumberOfSignals = this.state.signals.length;
             }
         }
     }, {
@@ -289,6 +300,76 @@ exports.default = Plot;
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.LinearLeftAxis = exports.LinearBottomAxis = exports.Axis = undefined;
+
+var _D3blackbox = __webpack_require__(5);
+
+var _D3blackbox2 = _interopRequireDefault(_D3blackbox);
+
+var _d = __webpack_require__(1);
+
+var d3 = _interopRequireWildcard(_d);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Axis = (0, _D3blackbox2.default)(function () {
+    var scale = d3.scaleLinear().domain([0, 10]).range([0, this.props.width]);
+
+    var axis = d3.axisBottom(scale);
+
+    d3.select(this.anchorRef.current).call(axis);
+});
+
+var LinearBottomAxis = (0, _D3blackbox2.default)(function () {
+    var domain = [0, 10];
+    if (this.props.domain !== undefined) {
+        domain = this.props.domain;
+    }
+
+    var scale = d3.scaleLinear().domain(domain).range([0, this.props.width]);
+
+    var axis = d3.axisBottom(scale);
+
+    d3.select(this.anchorRef.current).call(axis.tickSizeOuter(-this.props.height));
+
+    d3.select(this.gridRef.current).call(axis.tickSizeInner(-this.props.height).tickFormat(""));
+
+    d3.select(this.gridRef.current).selectAll("line").attr("stroke", "#999").attr("stroke-dasharray", "2,2");;
+});
+
+var LinearLeftAxis = (0, _D3blackbox2.default)(function () {
+    var domain = [0, 10];
+    if (this.props.domain !== undefined) {
+        domain = this.props.domain;
+    }
+
+    var scale = d3.scaleLinear().domain(domain).range([this.props.height, 0]);
+
+    var axis = d3.axisLeft(scale);
+
+    d3.select(this.anchorRef.current).call(axis.tickSizeOuter(-this.props.width));
+
+    d3.select(this.gridRef.current).call(axis.tickSizeInner(-this.props.width).tickFormat(""));
+
+    d3.select(this.gridRef.current).selectAll("line").attr("stroke", "#999").attr("stroke-dasharray", "2,2");
+});
+
+exports.Axis = Axis;
+exports.LinearBottomAxis = LinearBottomAxis;
+exports.LinearLeftAxis = LinearLeftAxis;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -450,97 +531,7 @@ var ZoomRegion = function (_Component) {
 exports.default = ZoomRegion;
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Plot = undefined;
-
-var _Plot = __webpack_require__(2);
-
-var _Plot2 = _interopRequireDefault(_Plot);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.Plot = _Plot2.default;
-
-/***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.LinearLeftAxis = exports.LinearBottomAxis = exports.Axis = undefined;
-
-var _D3blackbox = __webpack_require__(6);
-
-var _D3blackbox2 = _interopRequireDefault(_D3blackbox);
-
-var _d = __webpack_require__(1);
-
-var d3 = _interopRequireWildcard(_d);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Axis = (0, _D3blackbox2.default)(function () {
-    var scale = d3.scaleLinear().domain([0, 10]).range([0, this.props.width]);
-
-    var axis = d3.axisBottom(scale);
-
-    d3.select(this.anchorRef.current).call(axis);
-});
-
-var LinearBottomAxis = (0, _D3blackbox2.default)(function () {
-    var domain = [0, 10];
-    if (this.props.domain !== undefined) {
-        domain = this.props.domain;
-    }
-
-    var scale = d3.scaleLinear().domain(domain).range([0, this.props.width]);
-
-    var axis = d3.axisBottom(scale);
-
-    d3.select(this.anchorRef.current).call(axis.tickSizeOuter(-this.props.height));
-
-    d3.select(this.gridRef.current).call(axis.tickSizeInner(-this.props.height).tickFormat(""));
-
-    d3.select(this.gridRef.current).selectAll(".tick:not(:first-of-type) line").attr("stroke", "#999").attr("stroke-dasharray", "2,2");;
-});
-
-var LinearLeftAxis = (0, _D3blackbox2.default)(function () {
-    var domain = [0, 10];
-    if (this.props.domain !== undefined) {
-        domain = this.props.domain;
-    }
-
-    var scale = d3.scaleLinear().domain(domain).range([this.props.height, 0]);
-
-    var axis = d3.axisLeft(scale);
-
-    d3.select(this.anchorRef.current).call(axis.tickSizeOuter(-this.props.width));
-
-    d3.select(this.gridRef.current).call(axis.tickSizeInner(-this.props.width).tickFormat(""));
-
-    d3.select(this.gridRef.current).selectAll(".tick:not(:first-of-type) line").attr("stroke", "#999").attr("stroke-dasharray", "2,2");;
-});
-
-exports.Axis = Axis;
-exports.LinearBottomAxis = LinearBottomAxis;
-exports.LinearLeftAxis = LinearLeftAxis;
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -609,6 +600,26 @@ function D3blackbox(D3render) {
 }
 
 exports.default = D3blackbox;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Plot = undefined;
+
+var _Plot = __webpack_require__(2);
+
+var _Plot2 = _interopRequireDefault(_Plot);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.Plot = _Plot2.default;
 
 /***/ })
 /******/ ]);

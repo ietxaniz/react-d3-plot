@@ -26,9 +26,9 @@ class Plot extends Component {
             for (let i=0; i<(this.props.signals.length); i++) {
                 let signal = this.props.signals[i];
                 minx = Math.min(minx, Math.min(...signal.xData));
-                maxx = Math.max(minx, Math.max(...signal.xData));
+                maxx = Math.max(maxx, Math.max(...signal.xData));
                 miny = Math.min(miny, Math.min(...signal.yData));
-                maxy = Math.max(miny, Math.max(...signal.yData));
+                maxy = Math.max(maxy, Math.max(...signal.yData));
 
                 signals.push(parseSignal(this.props.signals[i]));
             }
@@ -51,7 +51,8 @@ class Plot extends Component {
             outerYRange: outerYRange,
             currentXRange: outerXRange,
             currentYRange: outerYRange,
-            signals: signals
+            signals: signals,
+            previousNumberOfSignals: 0
         }
     }
 
@@ -82,6 +83,11 @@ class Plot extends Component {
     }
 
     plotSignals() {
+        let colors = d3.schemeCategory10;
+        if(this.state.signals.length>10){
+            colors = d3.schemeCategory20;
+        }
+        
         // Create scales
         const xDomain = this.state.currentXRange;
         const yDomain = this.state.currentYRange;
@@ -96,16 +102,21 @@ class Plot extends Component {
             .defined(d => !isNaN(d.value))
             .x(d => xScale(d.key))
             .y(d => yScale(d.value))
-        
-        d3.select(this.signalsRef.current).select('path').remove();
+
+        for (let i=0; i<this.state.previousNumberOfSignals; i++) {
+            d3.select(this.signalsRef.current).select('path').remove();
+        }
 
         for (let i=0; i<this.state.signals.length; i++) {
             d3.select(this.signalsRef.current)
                 .append('path')
                 .datum(this.state.signals[i])
                 .attr("fill", "none")
-                .attr("stroke", "steelblue")
+                .attr("stroke", colors[i%colors.length])
                 .attr("d", line);
+        }
+        if (this.state.previousNumberOfSignals !== this.state.signals.length) {
+            this.state.previousNumberOfSignals = this.state.signals.length;
         }
 
     }
