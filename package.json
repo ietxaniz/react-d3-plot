@@ -1,6 +1,6 @@
 {
   "name": "react-d3-plot",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Small react ploting library. Uses d3.",
   "main": "build/index.js",
   "peerDependencies": {
@@ -20,6 +20,10 @@
   "author": {
     "name": "Iñigo Etxaniz",
     "email": "inigoetxaniz@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ietxaniz/react-d3-plot"
   },
   "license": "MIT",
   "devDependencies": {

@@ -9,6 +9,7 @@ class Plot extends Component {
         super(props);
 
         this.signalsRef = React.createRef()
+        this.parentDivRef = React.createRef()
 
         this.zoomEventHandler = this.zoomEventHandler.bind(this);
         this.zoomResetEventHandler = this.zoomResetEventHandler.bind(this);
@@ -64,6 +65,18 @@ class Plot extends Component {
         this.plotSignals();
     }
 
+    componentWillMount() {
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.updateDimensions.bind(this));
+    }
+
+    updateDimensions() {
+        this.setState({width: 100});
+    }
+
     zoomEventHandler(event) {
         const rangeWidth = this.state.currentXRange[1] - this.state.currentXRange[0];
         const rangeHeight = this.state.currentYRange[1] - this.state.currentYRange[0];
@@ -83,6 +96,13 @@ class Plot extends Component {
     }
 
     plotSignals() {
+        let totalWidth = d3.select(this.parentDivRef.current).style('width').slice(0,-2);
+        
+        if (this.state.width != totalWidth) {
+            this.setState({width: totalWidth});
+        }
+        
+
         let colors = d3.schemeCategory10;
         if(this.state.signals.length>10){
             colors = d3.schemeCategory20;
@@ -130,6 +150,7 @@ class Plot extends Component {
         const graphHeight = height-margin.top-margin.bottom;
 
         return(
+        <div ref={this.parentDivRef}>
           <svg width={width} height={height}>
             <LinearBottomAxis 
                 x={margin.left} 
@@ -164,7 +185,8 @@ class Plot extends Component {
                 height={graphHeight} 
                 onZoom={this.zoomEventHandler}
                 onZoomReset={this.zoomResetEventHandler}/>
-          </svg>   
+          </svg>
+          </div> 
         );
     }
 }

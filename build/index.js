@@ -127,6 +127,7 @@ var Plot = function (_Component) {
         var _this = _possibleConstructorReturn(this, (Plot.__proto__ || Object.getPrototypeOf(Plot)).call(this, props));
 
         _this.signalsRef = _react2.default.createRef();
+        _this.parentDivRef = _react2.default.createRef();
 
         _this.zoomEventHandler = _this.zoomEventHandler.bind(_this);
         _this.zoomResetEventHandler = _this.zoomResetEventHandler.bind(_this);
@@ -185,6 +186,21 @@ var Plot = function (_Component) {
             this.plotSignals();
         }
     }, {
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            window.addEventListener("resize", this.updateDimensions.bind(this));
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            window.removeEventListener("resize", this.updateDimensions.bind(this));
+        }
+    }, {
+        key: 'updateDimensions',
+        value: function updateDimensions() {
+            this.setState({ width: 100 });
+        }
+    }, {
         key: 'zoomEventHandler',
         value: function zoomEventHandler(event) {
             var rangeWidth = this.state.currentXRange[1] - this.state.currentXRange[0];
@@ -201,6 +217,12 @@ var Plot = function (_Component) {
     }, {
         key: 'plotSignals',
         value: function plotSignals() {
+            var totalWidth = d3.select(this.parentDivRef.current).style('width').slice(0, -2);
+
+            if (this.state.width != totalWidth) {
+                this.setState({ width: totalWidth });
+            }
+
             var colors = d3.schemeCategory10;
             if (this.state.signals.length > 10) {
                 colors = d3.schemeCategory20;
@@ -242,42 +264,46 @@ var Plot = function (_Component) {
             var graphHeight = height - margin.top - margin.bottom;
 
             return _react2.default.createElement(
-                'svg',
-                { width: width, height: height },
-                _react2.default.createElement(_Axis.LinearBottomAxis, {
-                    x: margin.left,
-                    y: height - margin.bottom,
-                    width: graphWidth,
-                    height: graphHeight,
-                    domain: this.state.currentXRange }),
-                _react2.default.createElement(_Axis.LinearLeftAxis, {
-                    x: margin.left,
-                    y: margin.top,
-                    width: graphWidth,
-                    height: graphHeight,
-                    domain: this.state.currentYRange }),
-                _react2.default.createElement('rect', {
-                    x: 0,
-                    y: 0,
-                    width: width,
-                    height: height,
-                    style: { fillOpacity: 0 } }),
+                'div',
+                { ref: this.parentDivRef },
                 _react2.default.createElement(
-                    'g',
-                    { transform: 'translate(' + this.state.margin.left + ', ' + this.state.margin.top + ')' },
+                    'svg',
+                    { width: width, height: height },
+                    _react2.default.createElement(_Axis.LinearBottomAxis, {
+                        x: margin.left,
+                        y: height - margin.bottom,
+                        width: graphWidth,
+                        height: graphHeight,
+                        domain: this.state.currentXRange }),
+                    _react2.default.createElement(_Axis.LinearLeftAxis, {
+                        x: margin.left,
+                        y: margin.top,
+                        width: graphWidth,
+                        height: graphHeight,
+                        domain: this.state.currentYRange }),
+                    _react2.default.createElement('rect', {
+                        x: 0,
+                        y: 0,
+                        width: width,
+                        height: height,
+                        style: { fillOpacity: 0 } }),
                     _react2.default.createElement(
-                        'svg',
-                        { width: graphWidth, height: graphHeight },
-                        _react2.default.createElement('g', { ref: this.signalsRef })
-                    )
-                ),
-                _react2.default.createElement(_ZoomRegion2.default, {
-                    x: margin.left,
-                    y: margin.top,
-                    width: graphWidth,
-                    height: graphHeight,
-                    onZoom: this.zoomEventHandler,
-                    onZoomReset: this.zoomResetEventHandler })
+                        'g',
+                        { transform: 'translate(' + this.state.margin.left + ', ' + this.state.margin.top + ')' },
+                        _react2.default.createElement(
+                            'svg',
+                            { width: graphWidth, height: graphHeight },
+                            _react2.default.createElement('g', { ref: this.signalsRef })
+                        )
+                    ),
+                    _react2.default.createElement(_ZoomRegion2.default, {
+                        x: margin.left,
+                        y: margin.top,
+                        width: graphWidth,
+                        height: graphHeight,
+                        onZoom: this.zoomEventHandler,
+                        onZoomReset: this.zoomResetEventHandler })
+                )
             );
         }
     }]);
