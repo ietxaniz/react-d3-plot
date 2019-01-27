@@ -1,5 +1,33 @@
 # react-d3-plot
 
+react-d3-plot is a library that provides components for easy drawing graphs. Currently ploting, box zooming and legend drawing is implemented.
+
+![](./imgs/beforeZoom.png)
+
+![](./imgs/afterZoom.png)
+
+## Implemented features
+
+- Line ploting
+- Left and bottom axis drawing
+- Legend
+- Box zooming
+- Un zooming (double-click)
+
+## Features I am planning to implement
+
+- Figure title
+- X axis label
+- Y axis label
+- Pan
+- Point ploting
+- Hidding/showing signals
+- Maximize option
+- Styles
+- Logarithmic axes
+
+## Documentation
+
 ## Create a sample project
 
 Sample using npm and create-react-app.
