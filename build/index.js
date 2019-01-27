@@ -224,6 +224,11 @@ var Plot = function (_Component) {
         key: 'zoomResetEventHandler',
         value: function zoomResetEventHandler() {
             this.setState({ currentXRange: this.state.outerXRange, currentYRange: this.state.outerYRange });
+            if (window.getSelection) {
+                window.getSelection().removeAllRanges();
+            } else if (document.selection) {
+                document.selection.empty();
+            }
         }
     }, {
         key: 'plotSignals',
@@ -295,7 +300,16 @@ var Plot = function (_Component) {
 
             for (var i = 0; i < this.state.names.length; i++) {
                 legendBox.append('rect').attr('x', x0 + marginLeft).attr('y', y0 + marginTopBottom + colorBoxMarginTopBottom + i * colorBoxHeight).attr('width', colorBoxWidth).attr('height', colorBoxHeight - 2 * colorBoxMarginTopBottom).attr('fill', colors[i % colors.length]);
-                legendBox.append('text').attr('x', x0 + marginLeft + colorBoxWidth + marginTextLeft).attr('y', y0 + (i + 0.5) * colorBoxHeight + textVerticalOffset).text(this.state.names[i]);
+
+                var textElement = legendBox.append('text').attr('x', x0 + marginLeft + colorBoxWidth + marginTextLeft).attr('y', y0 + (i + 0.5) * colorBoxHeight + textVerticalOffset).text(this.state.names[i]);
+
+                var allowedLength = width - (colorBoxWidth + marginTextLeft + marginLeft + marginRight);
+                var n = 0;
+                while (textElement.node().getComputedTextLength() > allowedLength) {
+                    n = n + 1;
+                    var text = this.state.names[i].substring(0, this.state.names[i].length - n) + '...';
+                    textElement.text(text);
+                }
             }
         }
     }, {

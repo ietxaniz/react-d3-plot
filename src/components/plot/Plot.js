@@ -99,6 +99,8 @@ class Plot extends Component {
 
     zoomResetEventHandler() {
         this.setState({currentXRange: this.state.outerXRange, currentYRange: this.state.outerYRange});
+        if (window.getSelection) {window.getSelection().removeAllRanges();}
+        else if (document.selection) {document.selection.empty();}
     }
 
     plotSignals() {
@@ -190,11 +192,21 @@ class Plot extends Component {
                 .attr('y', y0 + marginTopBottom + colorBoxMarginTopBottom + i*colorBoxHeight)
                 .attr('width', colorBoxWidth)
                 .attr('height', colorBoxHeight - 2 * colorBoxMarginTopBottom)
-                .attr('fill', colors[i%colors.length])
-            legendBox.append('text')
+                .attr('fill', colors[i%colors.length]);
+
+            let textElement = legendBox.append('text')
                 .attr('x', x0 + marginLeft + colorBoxWidth + marginTextLeft)
                 .attr('y', y0 + (i + 0.5)*colorBoxHeight + textVerticalOffset)
-                .text(this.state.names[i])
+                .text(this.state.names[i]);
+
+            let allowedLength = width - (colorBoxWidth + marginTextLeft + marginLeft + marginRight);
+            let n = 0;
+            while (textElement.node().getComputedTextLength() > allowedLength) {
+                n = n + 1;
+                let text = this.state.names[i].substring(0, this.state.names[i].length - n) + '...';
+                textElement.text(text);
+            }
+            
         }
 
     }
