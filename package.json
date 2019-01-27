@@ -26,6 +26,12 @@
     "url": "https://github.com/ietxaniz/react-d3-plot"
   },
   "license": "MIT",
+  "keywords": [
+    "react",
+    "d3",
+    "chart",
+    "plot"
+  ],
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
