@@ -134,13 +134,16 @@ var Plot = function (_Component) {
 
         _this.signalsRef = _react2.default.createRef();
         _this.parentDivRef = _react2.default.createRef();
+        _this.legendRef = _react2.default.createRef();
 
         _this.zoomEventHandler = _this.zoomEventHandler.bind(_this);
         _this.zoomResetEventHandler = _this.zoomResetEventHandler.bind(_this);
+        _this.drawLegend = _this.drawLegend.bind(_this);
 
         var outerXRange = [0, 1];
         var outerYRange = [0, 1];
         var signals = [];
+        var names = [];
 
         if (_this.props.signals !== undefined) {
             var minx = 1e100;
@@ -156,6 +159,7 @@ var Plot = function (_Component) {
                 maxy = Math.max(maxy, Math.max.apply(Math, _toConsumableArray(signal.yData)));
 
                 signals.push(parseSignal(_this.props.signals[i]));
+                names.push(signal.name);
             }
 
             outerXRange = [minx, maxx];
@@ -176,6 +180,7 @@ var Plot = function (_Component) {
             currentXRange: outerXRange,
             currentYRange: outerYRange,
             signals: signals,
+            names: names,
             previousNumberOfSignals: 0
         };
         return _this;
@@ -255,8 +260,42 @@ var Plot = function (_Component) {
             for (var _i = 0; _i < this.state.signals.length; _i++) {
                 d3.select(this.signalsRef.current).append('path').datum(this.state.signals[_i]).attr("fill", "none").attr("stroke", colors[_i % colors.length]).attr("d", line);
             }
+
+            this.drawLegend(colors);
+
             if (this.state.previousNumberOfSignals !== this.state.signals.length) {
                 this.state.previousNumberOfSignals = this.state.signals.length;
+            }
+        }
+    }, {
+        key: 'drawLegend',
+        value: function drawLegend(colors) {
+
+            if (this.state.signals.length !== this.state.names.length) {
+                return;
+            }
+
+            var y0 = 20;
+            var width = 150;
+            var marginTopBottom = 10;
+            var colorBoxHeight = 20;
+            var marginLeft = 4;
+            var colorBoxWidth = 15;
+            var marginTextLeft = 4;
+            var colorBoxMarginTopBottom = 9;
+            var textVerticalOffset = 16;
+            var marginRight = 10;
+
+            var x0 = this.state.width - width - marginRight - this.state.margin.left - this.state.margin.right;
+            var height = 2 * marginTopBottom + this.state.names.length * colorBoxHeight;
+
+            var legendBox = d3.select(this.legendRef.current).html('').append('g');
+
+            legendBox.append('rect').attr('x', x0).attr('y', y0).attr('width', width).attr('height', height).attr('fill', "white").attr('stroke-width', 0.5).attr('stroke', 'black');
+
+            for (var i = 0; i < this.state.names.length; i++) {
+                legendBox.append('rect').attr('x', x0 + marginLeft).attr('y', y0 + marginTopBottom + colorBoxMarginTopBottom + i * colorBoxHeight).attr('width', colorBoxWidth).attr('height', colorBoxHeight - 2 * colorBoxMarginTopBottom).attr('fill', colors[i % colors.length]);
+                legendBox.append('text').attr('x', x0 + marginLeft + colorBoxWidth + marginTextLeft).attr('y', y0 + (i + 0.5) * colorBoxHeight + textVerticalOffset).text(this.state.names[i]);
             }
         }
     }, {
@@ -305,7 +344,8 @@ var Plot = function (_Component) {
                         _react2.default.createElement(
                             'svg',
                             { width: graphWidth, height: graphHeight },
-                            _react2.default.createElement('g', { ref: this.signalsRef })
+                            _react2.default.createElement('g', { ref: this.signalsRef }),
+                            _react2.default.createElement('g', { ref: this.legendRef })
                         )
                     ),
                     _react2.default.createElement(_ZoomRegion2.default, {
