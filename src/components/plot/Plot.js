@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 
 import { LinearBottomAxis, LinearLeftAxis } from './Axis';
+import LeftAxis from './LeftAxis';
 import ZoomRegion from './ZoomRegion';
 
 class Plot extends Component {
@@ -141,6 +142,10 @@ class Plot extends Component {
 
     }
 
+    updateLeftAxisWidth(textWidth) {
+        this.setState({margin: {...this.state.margin, left: textWidth + 20}})
+    }
+
     render() {
         const margin = this.state.margin;
         const width = this.state.width;
@@ -158,12 +163,13 @@ class Plot extends Component {
                 width={graphWidth} 
                 height={graphHeight} 
                 domain={this.state.currentXRange}/>
-            <LinearLeftAxis 
+            <LeftAxis 
                 x={margin.left} 
                 y={margin.top} 
                 width={graphWidth} 
                 height={graphHeight} 
-                domain={this.state.currentYRange}/>
+                domain={this.state.currentYRange}
+                updateAxisWidth={this.updateLeftAxisWidth.bind(this)}/>
 
             <rect 
                 x={0} 
