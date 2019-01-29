@@ -9,6 +9,7 @@ export default class LeftAxis extends Component {
         this.gridRef = React.createRef();
 
         this.updateLeftAxis = this.updateLeftAxis.bind(this);
+        this.drawLabel = this.drawLabel.bind(this);
     }
 
     componentDidMount() {
@@ -50,7 +51,11 @@ export default class LeftAxis extends Component {
             .selectAll('text')
             .each(function(n){
                 // console.log(d3.select(this));
-                let itemLength = d3.select(this).node().getComputedTextLength();
+                let itemLength = 10;
+                try {
+                    d3.select(this).node().getComputedTextLength();
+                } catch (err) {}
+
                 if (itemLength > maxLength) {
                     maxLength = itemLength;
                 }
@@ -65,6 +70,16 @@ export default class LeftAxis extends Component {
             if (this.props.updateAxisWidth !== undefined) {
                 this.props.updateAxisWidth(Math.ceil(maxLength))
             }
+        }
+
+        this.drawLabel();
+    }
+
+    drawLabel() {
+        let label = {'text':''};
+        label = {...label, ...this.props.label};
+        if (label.text.length > 0) {
+
         }
     }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 
-import { LinearBottomAxis, LinearLeftAxis } from './Axis';
+import { LinearBottomAxis } from './Axis';
 import LeftAxis from './LeftAxis';
 import ZoomRegion from './ZoomRegion';
 
@@ -106,15 +106,15 @@ class Plot extends Component {
     plotSignals() {
         let totalWidth = d3.select(this.parentDivRef.current).style('width').slice(0,-2);
         
-        if (this.state.width != totalWidth) {
+        if (this.state.width !== totalWidth) {
             this.setState({width: totalWidth});
         }
         
 
         let colors = d3.schemeCategory10;
-        if(this.state.signals.length>10){
+        /*if(this.state.signals.length>10){
             colors = d3.schemeCategory20;
-        }
+        }*/
         
         // Create scales
         const xDomain = this.state.currentXRange;
@@ -147,7 +147,7 @@ class Plot extends Component {
         this.drawLegend(colors);
 
         if (this.state.previousNumberOfSignals !== this.state.signals.length) {
-            this.state.previousNumberOfSignals = this.state.signals.length;
+            this.setState({previousNumberOfSignals: this.state.signals.length});
         }
 
     }
@@ -201,7 +201,7 @@ class Plot extends Component {
 
             let allowedLength = width - (colorBoxWidth + marginTextLeft + marginLeft + marginRight);
             let n = 0;
-            while (textElement.node().getComputedTextLength() > allowedLength) {
+            while (getTextLength(textElement.node()) > allowedLength) {
                 n = n + 1;
                 let text = this.state.names[i].substring(0, this.state.names[i].length - n) + '...';
                 textElement.text(text);
@@ -276,6 +276,14 @@ function parseSignal(signal) {
         });
     }
     return arr;
+}
+
+function getTextLength(node) {
+    let length = 20;
+    try {
+        length = node.getComputedTextLength();
+    } catch(err) {}
+    return length;
 }
 
 export default Plot;

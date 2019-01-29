@@ -1,21 +1,32 @@
 {
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "babel": {
+    "presets": [
+      "react",
+      "env",
+      "stage-2"
+    ]
+  },
   "name": "react-d3-plot",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Small react ploting library. Uses d3.",
-  "main": "build/index.js",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "NODE_ENV=production && rm -rf dist && mkdir dist && npx babel src/lib --out-dir dist --copy-files --ignore __tests__,spec.js,test.js,__snapshots__",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "peerDependencies": {
     "react": "^16.7.0",
     "d3": "^4.13.0"
-  },
-  "dependencies": {
-    "react": "^16.7.0",
-    "d3": "^4.13.0",
-    "webpack": "^2.6.1"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack --watch",
-    "build": "webpack"
   },
   "author": {
     "name": "Iñigo Etxaniz",
@@ -33,11 +44,14 @@
     "plot"
   ],
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.24.1",
-    "babel-loader": "^7.0.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-preset-env": "^1.5.1"
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "d3": "^5.8.0",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-scripts": "^2.1.3",
+    "rimraf": "^2.6.3"
   }
 }
