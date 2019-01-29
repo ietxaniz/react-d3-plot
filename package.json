@@ -1,6 +1,7 @@
 {
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "files": ["dist", "readme.md"],
   "babel": {
     "presets": [
       "react",
@@ -11,7 +12,7 @@
   "name": "react-d3-plot",
   "version": "0.1.0",
   "description": "Small react ploting library. Uses d3.",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "react-scripts start",
     "build": "NODE_ENV=production && rm -rf dist && mkdir dist && npx babel src/lib --out-dir dist --copy-files --ignore __tests__,spec.js,test.js,__snapshots__",
