@@ -21,13 +21,16 @@ class App extends Component {
         yData: xData.map((value)=>2*Math.sin(value*5)-2+5.1*Math.sin(value))
       }
     ];
+    const plotStyle = {
+      yLabel: "Signal amplitude"
+    }
     return (
       <div className="App">
         <div style={{width: '45%', display: 'inline-block'}}>
-          <Plot signals={signals}  />
+          <Plot signals={signals} />
         </div>
         <div style={{width: '45%', display: 'inline-block'}}>
-          <Plot signals={signals}  />
+          <Plot signals={signals}  plotStyle={plotStyle}/>
         </div>
       </div>
     );

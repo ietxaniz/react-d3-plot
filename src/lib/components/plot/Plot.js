@@ -44,6 +44,10 @@ class Plot extends Component {
 
         }
 
+        const defaultPlotStyle = {
+            yLabel: ''
+        }
+
         this.state = {
             margin: {
                 left: 40,
@@ -59,7 +63,8 @@ class Plot extends Component {
             currentYRange: outerYRange,
             signals: signals,
             names: names,
-            previousNumberOfSignals: 0
+            previousNumberOfSignals: 0,
+            plotStyle: {...defaultPlotStyle,...this.props.plotStyle}
         }
     }
 
@@ -238,7 +243,8 @@ class Plot extends Component {
                 width={graphWidth} 
                 height={graphHeight} 
                 domain={this.state.currentYRange}
-                updateAxisWidth={this.updateLeftAxisWidth.bind(this)}/>
+                updateAxisWidth={this.updateLeftAxisWidth.bind(this)}
+                label={this.state.plotStyle.yLabel}/>
 
             <rect 
                 x={0} 

@@ -7,6 +7,7 @@ export default class LeftAxis extends Component {
 
         this.textRef = React.createRef();
         this.gridRef = React.createRef();
+        this.yLabel = React.createRef();
 
         this.updateLeftAxis = this.updateLeftAxis.bind(this);
         this.drawLabel = this.drawLabel.bind(this);
@@ -21,6 +22,10 @@ export default class LeftAxis extends Component {
     }
 
     updateLeftAxis() {
+        d3.select(this.gridRef.current)
+            .select('text')
+            .remove();
+
         let domain = [0, 10];
         if (this.props.domain !== undefined) {
             domain = this.props.domain;
@@ -51,7 +56,7 @@ export default class LeftAxis extends Component {
             .selectAll('text')
             .each(function(n){
                 // console.log(d3.select(this));
-                let itemLength = 10;
+                let itemLength = d3.select(this).node().getComputedTextLength();
                 try {
                     d3.select(this).node().getComputedTextLength();
                 } catch (err) {}
@@ -61,25 +66,48 @@ export default class LeftAxis extends Component {
                 }
             });
 
-        if (this.props.x - Math.ceil(maxLength) < 15) {
+        if (this.props.x - Math.ceil(maxLength) < 15 + this.getLabelWidth()) {
             if (this.props.updateAxisWidth !== undefined) {
-                this.props.updateAxisWidth(Math.ceil(maxLength))
+                this.props.updateAxisWidth(Math.ceil(maxLength)+ this.getLabelWidth())
             }
         }
-        else if (this.props.x - Math.ceil(maxLength) > 30){
+        else if (this.props.x - Math.ceil(maxLength) > 30 + this.getLabelWidth()){
             if (this.props.updateAxisWidth !== undefined) {
-                this.props.updateAxisWidth(Math.ceil(maxLength))
+                this.props.updateAxisWidth(Math.ceil(maxLength)+ this.getLabelWidth())
             }
         }
 
         this.drawLabel();
     }
 
-    drawLabel() {
-        let label = {'text':''};
-        label = {...label, ...this.props.label};
-        if (label.text.length > 0) {
+    getLabelWidth() {
+        const text = this.props.label;
+        if (text.length > 0) {
+            return 16;
+        }
+        return 0;
+    }
 
+    drawLabel() {
+            
+        const text = this.props.label;
+        if (text.length > 0) {
+
+            var texts = text;
+            d3.select(this.yLabel.current)
+                .select('text')
+                .remove();
+
+            d3.select(this.yLabel.current)
+                .append('text')
+                .text(texts)
+                .style('text-anchor', 'middle')
+                .attr('x1', 0)
+                .attr('x2', 0)
+                .attr('y1', 0)
+                .attr('y2', this.props.height)
+                .attr('transform', `translate(${-this.props.height/2  + 12}, ${0}), rotate(-90, ${this.props.height/2}, ${0})`)
+                .style('fill', 'black');
         }
     }
 
@@ -89,6 +117,7 @@ export default class LeftAxis extends Component {
             <g>
                 <g transform={`translate(${x}, ${y})`} ref={this.textRef}/>
                 <g transform={`translate(${x}, ${y})`} className="grid" ref={this.gridRef}/>
+                <g transform={`translate(0, ${y})`} className="grid" ref={this.yLabel}/>
             </g>
                 
         );
