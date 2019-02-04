@@ -22,14 +22,16 @@ class App extends Component {
       }
     ];
     const plotStyle = {
-      yLabel: "Signal amplitude"
+      yLabel: "Signal amplitude",
+      xLabel: "Time (s)",
+      title: "Signals ploting sample"
     }
     return (
       <div className="App">
-        <div style={{width: '45%', display: 'inline-block'}}>
+        <div style={{width: '50%', display: 'inline-block'}}>
           <Plot signals={signals} />
         </div>
-        <div style={{width: '45%', display: 'inline-block'}}>
+        <div style={{width: '50%', display: 'inline-block'}}>
           <Plot signals={signals}  plotStyle={plotStyle}/>
         </div>
       </div>

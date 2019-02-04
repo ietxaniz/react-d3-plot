@@ -10,7 +10,7 @@
     ]
   },
   "name": "react-d3-plot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Small react ploting library. Uses d3.",
   "private": false,
   "scripts": {

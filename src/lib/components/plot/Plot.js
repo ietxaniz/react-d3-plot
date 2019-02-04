@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 
-import { LinearBottomAxis } from './Axis';
 import LeftAxis from './LeftAxis';
+import BottomAxis from './BottomAxis';
 import ZoomRegion from './ZoomRegion';
 
 class Plot extends Component {
@@ -231,7 +231,7 @@ class Plot extends Component {
         return(
         <div ref={this.parentDivRef}>
           <svg width={width} height={height}>
-            <LinearBottomAxis 
+            <BottomAxis 
                 x={margin.left} 
                 y={height-margin.bottom} 
                 width={graphWidth} 
