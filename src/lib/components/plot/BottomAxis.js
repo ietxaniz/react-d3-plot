@@ -11,7 +11,8 @@ export default class BottomAxis extends Component{
         this.title = React.createRef();
 
         this.updateAxis = this.updateAxis.bind(this);
-        // this.drawLabel = this.drawLabel.bind(this);
+        this.drawLabel = this.drawLabel.bind(this);
+        this.drawTitle = this.drawTitle.bind(this);
     }
 
     componentDidMount() {
@@ -46,15 +47,20 @@ export default class BottomAxis extends Component{
         d3.select(this.gridRef.current)
             .selectAll("line")
             .attr("stroke", "#999")
-            .attr("stroke-dasharray", "2,2");;
-        }
+            .attr("stroke-dasharray", "2,2");
+
+        this.drawLabel();
+        this.drawTitle();
+        
+        // TODO: Update height and vertical position and send info to parent
+    }
 
     drawLabel() {
 
     }
 
     drawTitle() {
-
+        
     }
 
     render() {

@@ -44,16 +44,20 @@ class Plot extends Component {
 
         }
 
-        const defaultPlotStyle = {
-            yLabel: ''
+        const plotStyle = {
+            yLabel: '',
+            xLabel: '',
+            title: ''
+            ,...this.props.plotStyle
         }
 
         this.state = {
             margin: {
                 left: 40,
                 top: 10,
-                bottom: 25,
-                right: 10
+                bottom: plotStyle.xLabel.length > 0 ? 35 : 20,
+                right: 10,
+                topLabel: plotStyle.title.length > 0 ? 20 : 0,
             },
             width: 510,
             height: 400,
@@ -64,7 +68,7 @@ class Plot extends Component {
             signals: signals,
             names: names,
             previousNumberOfSignals: 0,
-            plotStyle: {...defaultPlotStyle,...this.props.plotStyle}
+            plotStyle: plotStyle
         }
     }
 
@@ -129,7 +133,7 @@ class Plot extends Component {
             .range([0, this.state.width-this.state.margin.left-this.state.margin.right]);
         const yScale = d3.scaleLinear()
             .domain(yDomain)
-            .range([this.state.height-this.state.margin.top-this.state.margin.bottom, 0]);
+            .range([this.state.height-this.state.margin.top-this.state.margin.topLabel-this.state.margin.bottom, 0]);
         
         let line = d3.line()
             .defined(d => !isNaN(d.value))
@@ -220,13 +224,17 @@ class Plot extends Component {
         this.setState({margin: {...this.state.margin, left: textWidth + 20}})
     }
 
+    updateTopAndBottomMargins(topMargin, bottomMargin) {
+
+    }
+
     render() {
         const margin = this.state.margin;
         const width = this.state.width;
         const height = this.state.height;
 
         const graphWidth = width-margin.left-margin.right;
-        const graphHeight = height-margin.top-margin.bottom;
+        const graphHeight = height-margin.top-margin.bottom-margin.topLabel;
 
         return(
         <div ref={this.parentDivRef}>
@@ -239,7 +247,7 @@ class Plot extends Component {
                 domain={this.state.currentXRange}/>
             <LeftAxis 
                 x={margin.left} 
-                y={margin.top} 
+                y={margin.top + margin.topLabel} 
                 width={graphWidth} 
                 height={graphHeight} 
                 domain={this.state.currentYRange}
@@ -253,7 +261,7 @@ class Plot extends Component {
                 height={height} 
                 style={{fillOpacity: 0}}/>
 
-            <g transform={`translate(${this.state.margin.left}, ${this.state.margin.top})`}>
+            <g transform={`translate(${this.state.margin.left}, ${this.state.margin.top + margin.topLabel})`}>
                 <svg width={graphWidth} height={graphHeight}>
                     <g ref={this.signalsRef}/>
                     <g ref={this.legendRef}/>
@@ -262,7 +270,7 @@ class Plot extends Component {
             
             <ZoomRegion 
                 x={margin.left} 
-                y={margin.top} 
+                y={margin.top + margin.topLabel} 
                 width={graphWidth} 
                 height={graphHeight} 
                 onZoom={this.zoomEventHandler}
