@@ -56,11 +56,41 @@ export default class BottomAxis extends Component{
     }
 
     drawLabel() {
+        const text = this.props.label;
+
+        d3.select(this.xLabel.current)
+            .select('text')
+            .remove();
+
+        console.log(text);
+        
+        if (text!== undefined && text.length > 0) {
+            d3.select(this.xLabel.current)
+                .append('text')
+                .text(text)
+                .style('text-anchor', 'middle')
+                .style('fill', 'black');
+        }
 
     }
 
     drawTitle() {
+        const text = this.props.title;
+
+        d3.select(this.title.current)
+            .select('text')
+            .remove();
+
+        console.log(text);
         
+        if (text!== undefined && text.length > 0) {
+            d3.select(this.title.current)
+                .append('text')
+                .text(text)
+                .style('text-anchor', 'middle')
+                .style('fill', 'black')
+                .style('font-weight',700);
+        }
     }
 
     render() {
@@ -69,8 +99,8 @@ export default class BottomAxis extends Component{
             <g>
                 <g transform={`translate(${x}, ${y})`} ref={this.textRef}/>
                 <g transform={`translate(${x}, ${y})`} className="grid" ref={this.gridRef}/>
-                <g transform={`translate(${x}, ${y})`} className="grid" ref={this.xLabel}/>
-                <g transform={`translate(${x}, ${y})`} className="grid" ref={this.title}/>
+                <g transform={`translate(${x + this.props.width/2}, ${y + 30})`} className="grid" ref={this.xLabel}/>
+                <g transform={`translate(${x + this.props.width/2}, 14)`} className="grid" ref={this.title}/>
             </g>
                 
         );

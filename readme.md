@@ -13,12 +13,12 @@ react-d3-plot is a library that provides components for easy drawing graphs. Cur
 - Legend
 - Box zooming
 - Un zooming (double-click)
+- Figure title
+- X axis label
 - Y axis label
 
 ## Features I am planning to implement
 
-- Figure title
-- X axis label
 - Pan
 - Point ploting
 - Hidding/showing signals

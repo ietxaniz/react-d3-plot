@@ -244,7 +244,9 @@ class Plot extends Component {
                 y={height-margin.bottom} 
                 width={graphWidth} 
                 height={graphHeight} 
-                domain={this.state.currentXRange}/>
+                domain={this.state.currentXRange}
+                label={this.state.plotStyle.xLabel}
+                title={this.state.plotStyle.title}/>
             <LeftAxis 
                 x={margin.left} 
                 y={margin.top + margin.topLabel} 
